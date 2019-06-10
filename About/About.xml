@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>RandomPlus for B18</name>
+	<author>mastertea, bionicjoethehat (porting)</author>
+	<!-- <url>https://github.com/mastertea/RandomPlus</url> -->
+	<targetVersion>0.18.1722</targetVersion>
+	<description>Special thanks: Mehni
+
+This is a B18 port of mastertea's mod that allows users to set minimum specifications for pawn generation when using the randomize button. It will keep rerolling until the minimum specification is meet or the max reroll limit is passed.
+	</description>
+</ModMetaData>
