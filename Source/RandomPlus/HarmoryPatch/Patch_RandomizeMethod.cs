@@ -17,7 +17,7 @@ namespace RandomPlus
 			RandomSettings.ResetRerollCounter ();
 		}
 
-		static IEnumerable<CodeInstruction> Transpiler (IEnumerable<CodeInstruction> instructions)
+		static IEnumerable<CodeInstruction> Transpiler (IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
 			var curPawnFieldInfo = typeof(Page_ConfigureStartingPawns)
 				.GetField ("curPawn", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -42,6 +42,10 @@ namespace RandomPlus
 //				this.curPawn = StartingPawnUtility.RandomizeInPlace (this.curPawn);
 //			} while (!RandomSettings.CheckPawnIsSatisfied (this.curPawn));
 
+			var ldargLabel = generator.DefineLabel ();
+
+			generator.MarkLabel (ldargLabel);
+
 			List <CodeInstruction> newCodes = new List<CodeInstruction> {
 				new CodeInstruction (OpCodes.Ldarg_0),
 				new CodeInstruction (OpCodes.Ldarg_0),
@@ -51,13 +55,8 @@ namespace RandomPlus
 				new CodeInstruction (OpCodes.Ldarg_0),
 				new CodeInstruction (OpCodes.Ldfld, curPawnFieldInfo),
 				new CodeInstruction (OpCodes.Call, checkPawnIsSatisfiedMethodInfo),
+				new CodeInstruction (OpCodes.Brfalse_S, ldargLabel),
 			};
-
-			newCodes [0].labels.Add (new Label ());
-
-			var ldargLabel = newCodes [0].labels [0];
-
-			newCodes.Add (new CodeInstruction (OpCodes.Brfalse_S, ldargLabel));
 
 			codes.InsertRange (appropriatePlace, newCodes);
 
